@@ -4,6 +4,7 @@ from flask_migrate import Migrate # import da extensão Migrate, para migração
 import pymysql # import do python para o MySQL.
 from empresa import Empresa # import do arquivo empresa.py e sua classe Empresa para integrar no Banco de Dados também.
 from diario import Diario # import do arquivo diario.py e sua classe Diario para integrar no Banco de Dados também.
+from professor import Professor # import do arquivo professor.py e sua classe Professor para integrar no Banco de Dados também.
 
 
 app = Flask(__name__)
@@ -35,6 +36,63 @@ migrate = Migrate(app, db)
 def index():
     return render_template('index.html')
 
+# ---------- INSERE OS DADOS NAS COLUNAS E TABELAS(INSERT) ---------- #
+@app.route('/add')
+def add():
+
+    obj = Diario('MeuDiario', 'PSI', 1)
+    db.session.add(obj)
+    db.session.commit()
+    
+    obj2 = Professor('ALBA')
+    db.session.add(obj2)
+    db.session.commit()
+
+    obj3 = Empresa('Edmundo', 'Presidente')
+    db.session.add(obj3)
+    db.session.commit()
+
+    
+    
+    return render_template('add.html')
+# ---------- INSERE OS DADOS NAS COLUNAS E TABELAS(INSERT) ---------- #
+
+# ---------- ATUALIZA OS DADOS DOS REGISTROS DAS COLUNAS, TABELAS ETC... (UPDATE) ---------- #
+@app.route('/upd')
+def upd():
+    obj = Diario.query.get(1)
+    obj.titulo = 'Doutora Alba'
+    obj.disciplina = 'PSI'
+    db.session.add(obj)
+    db.session.commit()
+
+    obj = Diario.query.get(5)
+    obj.titulo = 'Doutor Vicente'
+    obj.disciplina = 'BD'
+    db.session.add(obj)
+    db.session.commit()
+
+    return render_template('upd.html')
+# ---------- ATUALIZA OS DADOS DOS REGISTROS DAS COLUNAS, TABELAS ETC... (UPDATE) ---------- #
+
+# ---------- REMOVE OS DADOS DOS REGISTROS DAS COLUNAS, TABELAS ETC... (DELETE) ---------- #
+@app.route('/delete')
+def delete():
+#    obj = Diario.query.get(5)
+#    db.session.delete(obj)
+#    db.session.commit()
+
+#    obj = [Empresa.query.get(3), Empresa.query.get(4), Empresa.query.get(5)]
+#    for i in obj:
+#        db.session.delete(i)
+#        db.session.commit()
+    obj = Empresa.query.get(1)
+    db.session.delete(obj)
+    db.session.commit()
+
+
+    return render_template('delete.html')
+# ---------- REMOVE OS DADOS DOS REGISTROS DAS COLUNAS, TABELAS ETC... (DELETE) ---------- #
 
 if __name__ == '__main__':
     app.run(debug=True)
